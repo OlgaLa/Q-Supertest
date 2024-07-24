@@ -10,6 +10,8 @@ jobs:
   execute-tests:
     name: Checout and execute tests
     runs-on: ubuntu-latest
+    env:
+      ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       
