@@ -3,4 +3,5 @@ export type UserData = {
     gender: string
     email: string
     status: string
+    id?: number
 };
