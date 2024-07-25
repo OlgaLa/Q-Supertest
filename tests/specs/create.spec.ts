@@ -1,21 +1,15 @@
 import request from 'supertest';
-import { Utils } from './utils/utils';
-import { ApiPath } from './api_path/api_path';
+import { ApiPath } from '../api_path/api_path';
+import casual from "casual";
+import { UserData } from '../models/user-data';
+import { ACCESS_TOKEN, BASE_URL } from '../../supertest.config';
+import { setCommonHeaders } from '../helpers/utils';
 
-const baseUrl = "https://gorest.co.in/"
-const accessToken = process.env.ACCESS_TOKEN;
-
-function setCommonHeaders(req) {
-    return req
-        .set('Accept', 'application/json')
-        .set('Content-Type', 'application/json')
-        .set('Authorization', `Bearer ${accessToken}`);
-}
 
 describe('User API', () => {
     it('should get all users', async () => {
-        console.log(accessToken);
-        const response = await setCommonHeaders(request(baseUrl).get(ApiPath.users));
+        console.log(ACCESS_TOKEN);
+        const response = await setCommonHeaders(request(BASE_URL).get(ApiPath.users));
         
         expect(response.status).toBe(200)
 
@@ -26,21 +20,14 @@ describe('User API', () => {
     });
 
     it('should create a new user', async () => {
-        type UserData = {
-            name: string
-            gender: string
-            email: string
-            status: string
-        };
-
         const testUser: UserData = {
-            name: "Tenali Ramakrishna",
-            email: Utils.getRandomEmail(),
+            name: `${casual.first_name} ${casual.last_name}`,
+            email: `${casual.email}`,
             gender: "female",
             status: "active"
         }
 
-        const createUserResponce = await setCommonHeaders(request(baseUrl)
+        const createUserResponce = await setCommonHeaders(request(BASE_URL)
             .post("/public/v2/users")
             .send(testUser));
 
@@ -48,7 +35,7 @@ describe('User API', () => {
 
         expect(createUserResponce.status).toBe(201);
 
-        const getUserResponse = await setCommonHeaders(request(baseUrl).get(`${ApiPath.users}/${userId}`));
+        const getUserResponse = await setCommonHeaders(request(BASE_URL).get(`${ApiPath.users}/${userId}`));
 
         expect(getUserResponse.status).toBe(200);
 
@@ -63,14 +50,14 @@ describe('User API', () => {
     
     it('should update user', async () => {
         const userData = {
-            name: "Updated Name",
+            name: `${casual.first_name} ${casual.last_name}`,
+            email: `${casual.email}`,
             gender: "male",
-            email: Utils.getRandomEmail(),
             status: "inactive"
         };
 
         // Create a new user
-        const createUserResponse = await setCommonHeaders(request(baseUrl)
+        const createUserResponse = await setCommonHeaders(request(BASE_URL)
             .post(ApiPath.users)
             .send(userData));
         const userId = createUserResponse.body.id;
@@ -85,13 +72,13 @@ describe('User API', () => {
         };
             
 
-        const updateUserResponse = await setCommonHeaders(request(baseUrl)
+        const updateUserResponse = await setCommonHeaders(request(BASE_URL)
             .patch(`${ApiPath.users}/${userId}`)
             .send(updatedUserData));
         expect(updateUserResponse.status).toBe(200);
 
         // Get the updated user
-        const getUserResponse = await setCommonHeaders(request(baseUrl).get(`${ApiPath.users}/${userId}`));
+        const getUserResponse = await setCommonHeaders(request(BASE_URL).get(`${ApiPath.users}/${userId}`));
         expect(getUserResponse.status).toBe(200);
         expect(getUserResponse.body).toEqual({
             id: userId,
@@ -104,24 +91,24 @@ describe('User API', () => {
 
     it('should delete user', async () => {
         // Create a new user
-        const createUserResponse = await setCommonHeaders(request(baseUrl)
-            .post("/public/v2/users")
+        const createUserResponse = await setCommonHeaders(request(BASE_URL)
+            .post(ApiPath.users)
             .send({
-                name: "John Doe",
+                name: `${casual.first_name} ${casual.last_name}`,
+                email: `${casual.email}`,
                 gender: "male",
-                email: Utils.getRandomEmail(),
                 status: "active"
             }));
         const userId = createUserResponse.body.id;
         expect(createUserResponse.status).toBe(201);
 
         // Delete the user
-        const deleteUserResponse = await setCommonHeaders(request(baseUrl)
-            .delete(`/public/v2/users/${userId}`));
+        const deleteUserResponse = await setCommonHeaders(request(BASE_URL)
+            .delete(`${ApiPath.users}/${userId}`));
         expect(deleteUserResponse.status).toBe(204);
 
         // Verify that the user is deleted
-        const getUserResponse = await setCommonHeaders(request(baseUrl).get(`/public/v2/users/${userId}`));
+        const getUserResponse = await setCommonHeaders(request(BASE_URL).get(`${ApiPath.users}/${userId}`));
         expect(getUserResponse.status).toBe(404);
     });
 });
