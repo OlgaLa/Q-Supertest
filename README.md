@@ -29,6 +29,7 @@ Q-Supertest is a project designed to perform API testing using Supertest and Jes
 3. Create a `.env` file in the root directory and add the necessary environment variables:
 	```sh
 	ACCESS_TOKEN=your_access_token
+    BASE_URL='https://gorest.co.in/'
 	```
 
     Access tocken should be obtained from https://gorest.co.in/my-account/access-tokens
