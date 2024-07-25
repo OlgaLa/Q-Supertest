@@ -13,6 +13,13 @@
         "silent": false
       }
     ],      
-    "summary"
+    "summary",
+    [
+      "jest-ctrf-json-reporter",
+      {
+        "outputDir": "reports",
+        "outputFile": "report.json"
+      }
+    ]
    ]
 }

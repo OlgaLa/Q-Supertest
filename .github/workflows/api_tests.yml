@@ -13,9 +13,11 @@ jobs:
     env:
       ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
     steps:
-      - uses: actions/checkout@v4
-      
+      - uses: actions/checkout@v4      
       - name: Execute tests
         run: |
             yarn install
             yarn test
+      - name: Run CTRF annotations
+        run: npx github-actions-ctrf reports/report.json
+        if: always()
