@@ -11,8 +11,8 @@
       "github-actions",
       {
         "silent": false
-      },
-      "summary"
-    ]
+      }
+    ],      
+    "summary"
    ]
 }
