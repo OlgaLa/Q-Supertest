@@ -54,5 +54,4 @@ describe('User API', () => {
             message: ErrorMessages.resourceNotFound
         });
     });
-    
 });

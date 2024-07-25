@@ -78,5 +78,4 @@ describe('User API', () => {
         expect(response.body[0].field).toEqual("email");
         expect(response.body[0].message).toEqual(ErrorMessages.isInvalid);
     });
-    
 });

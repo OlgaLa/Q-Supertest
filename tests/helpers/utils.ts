@@ -11,7 +11,7 @@ export function setCommonHeaders(req) {
         .set('Authorization', `Bearer ${ACCESS_TOKEN}`);
 }
 
-export async function returnNewUser() {
+export async function returnNewUser() : Promise<UserData> {
     const testUser = {
         name: `${casual.first_name} ${casual.last_name}`,
         email: `${new Date().getTime()}-${casual.email}`,
@@ -22,6 +22,5 @@ export async function returnNewUser() {
     const createUserResponce = await setCommonHeaders(request(BASE_URL)
                 .post(ApiPath.users)
                 .send(testUser));
-    // const userId = createUserResponce.body.id;
     return createUserResponce.body as UserData;
 }
